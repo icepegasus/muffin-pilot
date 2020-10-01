@@ -10,6 +10,6 @@ public class Member extends AbstractEntity{
 	
 	private String memberName;
 	private String memberCarNo;
-	private String state="Normal";
+	private String memberState="Normal";
 	
 }
