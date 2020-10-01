@@ -21,7 +21,6 @@ import com.sample.muffin.domain.service.OrderService;
 @RestController
 @RequestMapping(value = "/orders", produces = MediaType.APPLICATION_JSON_VALUE)
 public class OrderController {
-	private static final Logger log = LoggerFactory.getLogger(OrderController.class);
 
 	@Autowired
 	private OrderService orderService;

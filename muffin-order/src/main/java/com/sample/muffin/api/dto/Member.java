@@ -1,9 +1,5 @@
 package com.sample.muffin.api.dto;
 
-import javax.persistence.Entity;
-
-import com.sample.muffin.domain.model.AbstractEntity;
-
 import lombok.Data;
 
 
