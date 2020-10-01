@@ -2,9 +2,27 @@ server:
   port: 8083
 
 spring:
-  profiles:
-    active: 
-    - default
+  profiles: default
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+        streams:
+          binder:
+              default:
+                key:
+                  serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+                value:
+                  serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+      bindings:
+        event-in:
+          group: orders${random.value}
+          destination: eventTopic
+          contentType: application/json
+        event-out:
+          destination: eventTopic
+          contentType: application/json
   
   jackson:
     serialization:
