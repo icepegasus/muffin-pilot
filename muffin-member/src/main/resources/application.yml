@@ -30,20 +30,6 @@ spring:
         show_sql: true
         format_sql: true
         sql_comments: true
-        
-  cloud:
-    stream:
-      kafka:
-        binder:
-          brokers: localhost:9092
-      bindings:
-        input:
-          group: product
-          destination: shop
-          contentType: application/json
-        output:
-          destination: shop
-          contentType: application/json
 
 logging:
   level: 
