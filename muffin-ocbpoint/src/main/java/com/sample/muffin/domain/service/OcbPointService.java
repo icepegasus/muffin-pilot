@@ -10,15 +10,15 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sample.muffin.config.KafkaProcessor;
-import com.sample.muffin.domain.model.Member;
+import com.sample.muffin.domain.model.OcbPoint;
 import com.sample.muffin.domain.model.OrderPlaced;
-import com.sample.muffin.domain.repository.MemberRepository;
+import com.sample.muffin.domain.repository.OcbPointRepository;
 
 @Service
-public class MemberService {
+public class OcbPointService {
 	
 	@Autowired
-	MemberRepository MemberRepository;
+	OcbPointRepository ocbPointRepository;
 
 	@StreamListener(KafkaProcessor.INPUT)
 	public void onOrderPlaced(@Payload String message) {
@@ -31,15 +31,17 @@ public class MemberService {
 			orderPlaced = objectMapper.readValue(message, OrderPlaced.class);
 
 			if( orderPlaced.isMe()){
-				System.out.println("MemberService : "+orderPlaced);
+				System.out.println("OCBService : "+orderPlaced);
 				
-				Optional<Member> memberOptional =  MemberRepository.findById(orderPlaced.getMemberId());
-				Member member = memberOptional.get();
+				Optional<OcbPoint> memberOptional =  ocbPointRepository.findById(orderPlaced.getMemberId());
+				OcbPoint ocbPoint = memberOptional.get();
 				
-				member.setMemberState("Reserved");
-				System.out.println("Member Reserved"+member);
+				int point = ocbPoint.getOcbPoint()+(int)(orderPlaced.getPrice()*0.1);
 				
-				MemberRepository.save(member);
+				ocbPoint.setOcbPoint(point);
+				
+				System.out.println("ocbPoint Saved : "+ocbPoint);
+				ocbPointRepository.save(ocbPoint);
 				
 			}
 

@@ -6,8 +6,8 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.context.ApplicationContext;
 
 import com.sample.muffin.config.KafkaProcessor;
-import com.sample.muffin.domain.model.Member;
-import com.sample.muffin.domain.repository.MemberRepository;
+import com.sample.muffin.domain.model.OcbPoint;
+import com.sample.muffin.domain.repository.OcbPointRepository;
 
 @SpringBootApplication
 @EnableBinding(KafkaProcessor.class)
@@ -17,26 +17,15 @@ public class Application {
 	public static void main(String[] args) {
 		applicationContext = SpringApplication.run(Application.class, args);
 		
-		MemberRepository memberRepository = applicationContext.getBean(MemberRepository.class);
+		OcbPointRepository ocbRepository = applicationContext.getBean(OcbPointRepository.class);
 		
-		Member member1 = new Member();
+		OcbPoint ocbPoint1 = new OcbPoint();
 		
-		member1.setMemberCarNo("14누7051");
-		member1.setMemberName("최창우");
-		
-		memberRepository.save(member1);
-		
-		Member member2 = new Member();
-		
-		member2.setMemberCarNo("12가1234");
-		member2.setMemberName("김민주");
-		
-		memberRepository.save(member2);
-		
-		
-		
+		ocbPoint1.setMemberId((long)1);
+		ocbPoint1.setMemberName("최창우");
+		ocbPoint1.setOcbPoint(2000);
+	
+		ocbRepository.save(ocbPoint1);
 	}
-	
-	
 
 }
