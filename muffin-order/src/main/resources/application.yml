@@ -3,6 +3,8 @@ server:
 
 spring:
   profiles: default
+  application:
+    name: order-service
   cloud:
     stream:
       kafka:
@@ -48,6 +50,11 @@ spring:
         show_sql: true
         format_sql: true
         sql_comments: true
+        
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9091/eureka
 
 logging:
   level: 
