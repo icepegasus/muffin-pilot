@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sample.muffin.config.KafkaProcessor;
 import com.sample.muffin.domain.model.Member;
+import com.sample.muffin.domain.model.OrderCancelled;
 import com.sample.muffin.domain.model.OrderPlaced;
 import com.sample.muffin.domain.repository.MemberRepository;
 
@@ -27,19 +28,38 @@ public class MemberService {
 		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
 		OrderPlaced orderPlaced = null;
+		String sagaRollback = "Y";
 		try {
 			orderPlaced = objectMapper.readValue(message, OrderPlaced.class);
 
 			if( orderPlaced.isMe()){
-				System.out.println("MemberService : "+orderPlaced);
 				
-				Optional<Member> memberOptional =  MemberRepository.findById(orderPlaced.getMemberId());
-				Member member = memberOptional.get();
+				//시스템 이상 발생 가정
+				if("Y".equals(sagaRollback)) {
+					
+					OrderCancelled orderCancelled = new OrderCancelled();
+					orderCancelled.setMemberCarNo(orderPlaced.getMemberCarNo());
+					orderCancelled.setMemberId(orderPlaced.getMemberId());
+					orderCancelled.setMemberName(orderPlaced.getMemberName());
+					orderCancelled.setOrderId(orderPlaced.getOrderId());
+					orderCancelled.setStationId(orderPlaced.getStationId());
+					orderCancelled.setStationName(orderPlaced.getStationName());
+					orderCancelled.setPrice(orderPlaced.getPrice());
+					orderCancelled.publish();
+					
 				
-				member.setMemberState("Reserved");
-				System.out.println("Member Reserved"+member);
-				
-				MemberRepository.save(member);
+				}else {
+					System.out.println("MemberService : "+orderPlaced);
+					
+					Optional<Member> memberOptional =  MemberRepository.findById(orderPlaced.getMemberId());
+					Member member = memberOptional.get();
+					
+					member.setMemberState("Reserved");
+					System.out.println("Member Reserved"+member);
+					
+					MemberRepository.save(member);
+					
+				}
 				
 			}
 

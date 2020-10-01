@@ -9,6 +9,7 @@ import lombok.Data;
 public class OcbPoint extends AbstractEntity{
 	
 	private Long memberId;
+	private Long orderId;
 	private String memberName;
 	private int ocbPoint;
 	
