@@ -28,7 +28,7 @@ public class MemberService {
 		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
 		OrderPlaced orderPlaced = null;
-		String sagaRollback = "Y";
+		String sagaRollback = "N";
 		try {
 			orderPlaced = objectMapper.readValue(message, OrderPlaced.class);
 
