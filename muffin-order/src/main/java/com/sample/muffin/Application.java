@@ -12,7 +12,7 @@ import com.sample.muffin.config.KafkaProcessor;
 @SpringBootApplication
 @EnableFeignClients
 @EnableBinding(KafkaProcessor.class)
-@EnableDiscoveryClient
+//@EnableDiscoveryClient
 public class Application {
 	
 	public static ApplicationContext applicationContext;

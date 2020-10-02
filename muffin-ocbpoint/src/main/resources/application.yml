@@ -38,17 +38,17 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         sql_comments: true
 
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:9091/eureka
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://localhost:9091/eureka
 
 logging:
   level: 
@@ -99,10 +99,10 @@ spring:
         format_sql: true
         sql_comments: true
 
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://discovery-service:9091/eureka
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://discovery-service:9091/eureka
 
 logging:
   level: 

@@ -49,10 +49,10 @@ spring:
         format_sql: true
         sql_comments: true
         
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:9091/eureka
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://localhost:9091/eureka
 
 logging:
   level: 
@@ -108,10 +108,10 @@ spring:
         format_sql: true
         sql_comments: true
         
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://discovery-service:9091/eureka
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://discovery-service:9091/eureka
 
 logging:
   level: 

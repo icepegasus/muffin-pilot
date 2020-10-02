@@ -11,13 +11,13 @@ import com.sample.muffin.domain.model.Order;
 import com.sample.muffin.domain.service.OrderService;
 
 @RestController
-@RequestMapping(value = "/api/orders", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping("/apis")
 public class OrderController {
 
 	@Autowired
 	private OrderService orderService;
 
-	@PostMapping("/")
+	@PostMapping("/orders")
 	public void createOrder(@RequestBody Order order) {
 		orderService.placeOrder(order);
 	}
