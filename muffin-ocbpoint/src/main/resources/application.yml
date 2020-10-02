@@ -53,3 +53,57 @@ eureka:
 logging:
   level: 
     org.hibernate.type: trace
+    
+---
+spring:
+  profiles: docker
+  application:
+    name: ocbpoint-service
+  datasource:
+    url: jdbc:mysql://mysql:3306/muffin
+    username: root
+    password:
+    initialization-mode: always 
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: kafka:9092
+        streams:
+          binder:
+              default:
+                key:
+                  serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+                value:
+                  serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+      bindings:
+        event-in:
+          group: orders${random.value}
+          destination: eventTopic
+          contentType: application/json
+        event-out:
+          destination: eventTopic
+          contentType: application/json
+  
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+    
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        sql_comments: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery-service:9091/eureka
+
+logging:
+  level: 
+    org.hibernate.type: trace

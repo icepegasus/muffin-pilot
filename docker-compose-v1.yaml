@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  zoo:
+  zoo1:
     image: zookeeper:3.4.9
     hostname: zoo1
     ports:
@@ -16,7 +16,7 @@ services:
       - ./zk-single-kafka-single/zoo1/data:/data
       - ./zk-single-kafka-single/zoo1/datalog:/datalog
 
-  kafka:
+  kafka1:
     image: confluentinc/cp-kafka:5.5.1
     hostname: kafka1
     ports:
@@ -24,7 +24,7 @@ services:
     networks: 
       - default_net
     environment:
-      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka1:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka1:19092,LISTENER_DOCKER_EXTERNAL://kafka1:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
       KAFKA_ZOOKEEPER_CONNECT: "zoo1:2181"
@@ -59,7 +59,38 @@ services:
       - default_net
     volumes:
       - redis-data:/data
-
+  discovery-service:
+    build:  ./muffin-discovery
+    ports: 
+      - "9091:9091"
+    #expose:
+    #  - "9091"
+    networks: 
+      - default_net
+    entrypoint: java -Dspring.profiles.active=docker -jar /app.jar
+  gateway-service:
+    build:  ./muffin-gateway
+    depends_on:
+      - discovery-service
+    ports: 
+      - "8080:8080"
+    networks: 
+      - default_net
+    entrypoint: java -Dspring.profiles.active=docker -jar /app.jar
+  order-service:
+    build:  ./muffin-order
+    depends_on:
+      - kafka1
+      - discovery-service
+      - mysql
+    # ports: 
+    #  - "8083:8083"
+    expose:
+      - "8080"
+    networks: 
+      - default_net
+    entrypoint: java -Dspring.profiles.active=docker -jar /app.jar
+    
 networks:
   default_net:
     driver: "bridge"
@@ -67,3 +98,4 @@ networks:
 volumes:
   sqldb:
   redis-data:
+

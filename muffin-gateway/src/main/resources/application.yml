@@ -42,30 +42,24 @@ server:
 spring:
   profiles: docker
   cloud:
-    config:
-      uri: http://config-service:9090
-      name: ${spring.application.name},eshop
-      failFast: true
-      retry:
-        maxAttempts: 20
     gateway:
       routes:
-        - id: userService
-          uri: http://user-service:8081
+        - id: memberService
+          uri: http://member-service:8080
           predicates:
-            - Path=/users/**
-        - id: productService
-          uri: http://product-service:8082
+            - Path=/members/**
+        - id: stationService
+          uri: http://station-service:8080
           predicates:
-            - Path=/products/**
+            - Path=/stations/**
         - id: orderService
-          uri: http://order-service:8083
+          uri: http://order-service:8080
           predicates:
             - Path=/orders/**
-        - id: cartService
-          uri: http://cart-service:8084
+        - id: ocbPointService
+          uri: http://ocbPoint-service:8080
           predicates:
-            - Path=/cart/**
+            - Path=/ocbPoints/**
 eureka:
   client:
     serviceUrl:
