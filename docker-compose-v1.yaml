@@ -90,7 +90,42 @@ services:
     networks: 
       - default_net
     entrypoint: java -Dspring.profiles.active=docker -jar /app.jar
-    
+  member-service:
+    build:  ./muffin-member
+    depends_on:
+      - kafka1
+      - discovery-service
+    # ports: 
+    #  - "8083:8083"
+    expose:
+      - "8080"
+    networks: 
+      - default_net
+    entrypoint: java -Dspring.profiles.active=docker -jar /app.jar    
+  ocbpoint-service:
+    build:  ./muffin-ocbpoint
+    depends_on:
+      - kafka1
+      - discovery-service
+      - mysql
+    # ports: 
+    #  - "8083:8083"
+    expose:
+      - "8080"
+    networks: 
+      - default_net
+    entrypoint: java -Dspring.profiles.active=docker -jar /app.jar    
+  station-service:
+    build:  ./muffin-station
+    depends_on:
+      - discovery-service
+    # ports: 
+    #  - "8083:8083"
+    expose:
+      - "8080"
+    networks: 
+      - default_net
+    entrypoint: java -Dspring.profiles.active=docker -jar /app.jar       
 networks:
   default_net:
     driver: "bridge"

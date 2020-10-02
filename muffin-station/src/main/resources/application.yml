@@ -2,9 +2,7 @@ server:
   port: 8082
 
 spring:
-  profiles:
-    active: 
-    - default
+  profiles: default
   application:
     name: station-service
   
@@ -44,9 +42,7 @@ logging:
     
 ---
 spring:
-  profiles:
-    active: 
-    - docker
+  profiles: docker
   application:
     name: station-service
   

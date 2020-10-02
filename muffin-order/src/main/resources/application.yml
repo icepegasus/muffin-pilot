@@ -59,6 +59,7 @@ logging:
     org.hibernate.type: trace
     
 ---
+
 spring:
   profiles: docker
   application:
