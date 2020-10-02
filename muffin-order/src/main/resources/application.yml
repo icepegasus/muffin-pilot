@@ -5,6 +5,13 @@ spring:
   profiles: default
   application:
     name: order-service
+    
+  datasource:
+    url: jdbc:mysql://localhost:3307/muffin
+    username: root
+    password:
+    initialization-mode: always 
+      
   cloud:
     stream:
       kafka:
@@ -30,21 +37,12 @@ spring:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
     
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-   
-  datasource:
-    url: jdbc:h2:mem:account
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
+
     
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         show_sql: true

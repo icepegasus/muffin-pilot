@@ -7,20 +7,36 @@ services:
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
       MYSQL_ROOT_PASSWORD:
-      MYSQL_DATABASE: muffin
+      MYSQL_DATABASE: eshop
       MYSQL_USER: root
       MYSQL_PASSWORD:
     ports:
-      - "3306:3306"
+      - "3307:3306"
     networks:
       - default_net
     volumes:
       - sqldb:/var/lib/mysql
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+  rabbitmq-container:
+    build: ./rabbitmq
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    networks: 
+      - default_net
+  mongo-container:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: eshop
+    ports:
+      - "27018:27017"
+    networks: 
+      - default_net
   redis-container:
     image: redis:6-alpine
     ports:
-      - "6379:6379"
+      - "6380:6379"
     networks: 
       - default_net
     volumes:
