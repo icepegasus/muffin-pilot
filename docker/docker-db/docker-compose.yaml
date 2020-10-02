@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+  mysql:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_ROOT_PASSWORD:
+      MYSQL_DATABASE: eshop
+      MYSQL_USER: root
+      MYSQL_PASSWORD:
+    ports:
+      - "3307:3306"
+    networks:
+      - default_net
+    volumes:
+      - sqldb:/var/lib/mysql
+  rabbitmq-container:
+    build: ./rabbitmq
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    networks: 
+      - default_net
+  mongo-container:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: eshop
+    ports:
+      - "27018:27017"
+    networks: 
+      - default_net
+  redis-container:
+    image: redis:6-alpine
+    ports:
+      - "6380:6379"
+    networks: 
+      - default_net
+    volumes:
+      - redis-data:/data
+
+networks:
+  default_net:
+    driver: "bridge"
+
+volumes:
+  sqldb:
+  redis-data:
