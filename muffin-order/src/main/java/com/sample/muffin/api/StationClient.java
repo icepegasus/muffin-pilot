@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sample.muffin.api.dto.Station;
 
-@FeignClient(name = "station-service" , url="http://station-service:8080")
+@FeignClient(name = "station-service" , url="http://station-svc:8080")
 public interface StationClient {
 	@RequestMapping(method = RequestMethod.GET, value = "/stations")
 	Page<Station> getStations(@RequestParam("page") Integer page, @RequestParam("size") Integer size);

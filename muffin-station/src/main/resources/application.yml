@@ -79,3 +79,44 @@ spring:
 logging:
   level: 
     org.hibernate.type: trace
+    
+    
+---
+spring:
+  profiles: k8s
+  application:
+    name: station-service
+  
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+    
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+   
+  datasource:
+    url: jdbc:h2:mem:account
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+    
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        sql_comments: true
+        
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://discovery-service:9091/eureka
+
+logging:
+  level: 
+    org.hibernate.type: trace

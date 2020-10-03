@@ -6,7 +6,8 @@ COPY . .
 RUN mvn clean package -Dmaven.test.skip=true
 
 # Package stage
-FROM adoptopenjdk/openjdk8:alpine-jre
+FROM openjdk:8-jre-alpine
+RUN apk --no-cache add curl
 COPY --from=maven target/*.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-Dspring.profiles.active=docker","-jar","/app.jar"]
+ENTRYPOINT ["java","-Dspring.profiles.active=k8s","-jar","/app.jar"]
