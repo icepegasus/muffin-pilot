@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: member-deployment
+spec:
+  selector:
+    matchLabels:
+      app: member-service
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        app: member-service
+    spec:
+      containers:
+      - name: muffin-member
+        image: icepegasus/muffin-member
+        env:
+        - name: MYSQL_SERVER_INFO
+          value: "mysql-svc:3306/muffin"
+        - name: KAFKA_SERVER_INFO
+          value: "kafka-svc:9092"
+      terminationGracePeriodSeconds: 0
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: member-svc
+spec:
+  selector:
+    app: member-service
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
