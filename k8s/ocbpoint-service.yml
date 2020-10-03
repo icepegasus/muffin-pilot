@@ -23,6 +23,20 @@ spec:
           value: "mysql-svc:3306/muffin"
         - name: KAFKA_SERVER_INFO
           value: "kafka-svc:9092"
+        readinessProbe:
+          httpGet:                
+            path: /actuator/health         
+            port: 8080   
+          initialDelaySeconds: 80
+          periodSeconds: 10
+          successThreshold: 1     
+        livenessProbe:
+          httpGet:                
+            path: /actuator/health         
+            port: 8080            
+          initialDelaySeconds: 80 
+          periodSeconds: 10       
+          failueThreshold: 3
       terminationGracePeriodSeconds: 0
 ---
 

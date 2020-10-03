@@ -18,6 +18,20 @@ spec:
       containers:
       - name: muffin-order
         image: icepegasus/muffin-order
+        readinessProbe:
+          httpGet:                
+            path: /actuator/health         
+            port: 8080   
+          initialDelaySeconds: 80
+          periodSeconds: 10
+          successThreshold: 1     
+        livenessProbe:
+          httpGet:                
+            path: /actuator/health         
+            port: 8080            
+          initialDelaySeconds: 80 
+          periodSeconds: 10       
+          failueThreshold: 3
         env:
         - name: MYSQL_SERVER_INFO
           value: "mysql-svc:3306/muffin"
@@ -37,5 +51,3 @@ spec:
   - port: 8080
     protocol: TCP
     targetPort: 8080
-    nodePort: 30000
-  type: NodePort

@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: service-ing
+spec:
+  rules:
+  - http:
+      paths:
+        - path: /orders
+          backend:
+            serviceName: order-svc
+            servicePort: 8080
+        - path: /members
+          backend:
+            serviceName: member-svc
+            servicePort: 8080
+        - path: /stations
+          backend:
+            serviceName: station-svc
+            servicePort: 8080
+        - path: /ocbPoints
+          backend:
+            serviceName: ocbpoint-svc
+            servicePort: 8080
