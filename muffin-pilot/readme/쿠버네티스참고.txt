@@ -1,0 +1,156 @@
+https://192.168.0.30:6443/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJrdWJlcm5ldGVzLWRhc2hib2FyZC10b2tlbi1oNm5kayIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjgzYWU1NDk2LWM4ZWItNDg3OS05OGRmLTEyYWY5ZjdlYmJhMCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlcm5ldGVzLWRhc2hib2FyZDprdWJlcm5ldGVzLWRhc2hib2FyZCJ9.DS45JgMjmxlytHD1BknlJ4U7uOQYTgT2YTZxwqS5uhrV9nfVbGkronJ_ZUZlq8t2-Asu3eu6K337JR4oSQATYr-9h8xRscn--f9IQebvi4BYmpOuMkHoGJqbGdcLhjCmodgGw-SMxINI05js6NaO1e7VomjW9B3Z8OR6N2qe24nObo0L7RsM5WBMvN1QSOnyee1xuqKVH0OStAcrXp_eCxsovLpbgDUMCPiZTtJolGw2TGaPX6OJQ6eNrKZOzU_BKJh4ma1KG4pqWXqBQXAiQwLy16DFCBWHFnqfRLbAZ9ysfWklxkfzUP8KQfy7xK6xv6-rISpoNbcybQzsLHSvXw
+https://hooks.slack.com/services/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
+while true; do curl 10.108.152.76:8080/version; sleep 1; done
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-2
+spec:
+  selector:
+    matchLabels:
+      type: app2
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        type: app2
+    spec:
+      containers:
+      - name: container
+        image: kubetm/app:v1
+      terminationGracePeriodSeconds: 0
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-2
+spec:
+  selector:
+    type: app2
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+
+while true; do date && curl 10.109.183.62:8080/hostname; sleep 1; done
+
+while true; do date && curl 10.101.109.186:8080/health; sleep 1; done
+
+
+curl 20.111.156.123:8080/status500
+
+--readinessProbe/livenessProbe basic
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-probe
+  labels:
+    app: probe
+spec:
+  containers:
+  - name: probe
+    image: kubetm/app
+    ports:
+    - containerPort: 8080	
+    readinessProbe:
+      exec:                   # command 내용으로 점검
+        command: ["cat", "/readiness/ready.txt"]   
+      initialDelaySeconds: 10
+      periodSeconds: 5
+      successThreshold: 3     # 3번 성공시 Service와 연결됨
+    livenessProbe:
+      httpGet:                # HttpGet 메소드로 점검
+        path: /health         # 체크할 경로
+        port: 8080            # 체크할 Port
+      initialDelaySeconds: 5  # 최초 5초 후에 LivenessProbe 체크를 시작함
+      periodSeconds: 10       # 10초마다 LivenessProbe 체크
+      failueThreshold: 3      # 3번 실패시 Pod Restart
+
+*유용명령어
+while true; do date && curl 10.103.160.58:8080/health; sleep 1; done
+kubectl get events -w | grep pod-readiness-exec1
+watch "kubectl describe pod pod-liveness-httpget1 | grep -A10 Events"
+kubectl describe pod pod-readiness-exec1 | grep -A5 Conditions
+kubectl describe endpoints svc-readiness
+
+
+--service 상세 (headness, Endpoints, ExternalName)
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: headless1
+spec:
+  selector:             # 생략시 Endpoints 직접 생성해서 사용
+    svc: headless
+  ports:
+    - port: 80
+      targetPort: 8080    
+  clusterIP: None       # headless 서비스  
+  type: ExternalName    # ExternalName Service 설정시 사용
+  externalName: github.github.io  # ExternalName사용시 연결 Domain지정
+
+
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: headless1       # Service의 이름과 동일하게 지정
+subsets:
+ - addresses:
+   - ip: 20.109.5.12    # Pod의 ClusterIp
+   ports:
+   - port: 8080         # Pod의 Container Port
+
+*유용명령어 (Endpoints 상세보기)
+kubectl describe endpoints endpoint1
+
+--Authenication
+
+*인증서 보기
+grep 'client-certificate-data' /etc/kubernetes/admin.conf | head -n 1 | awk '{print $2}' | base64 -d
+grep 'client-key-data' /etc/kubernetes/admin.conf | head -n 1 | awk '{print $2}' | base64 -d
+
+curl -k --key ./Client.key --cert ./Client.crt https://192.168.0.30:6443/api/v1/nodes
+curl -k -H "Authorization: Bearer TOKEN" https://192.168.0.30:6443/api/v1
+
+*kubeconfig context 교체
+kubectl config use-context context-a
+
+--Ingress
+# 인증서 생성
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=www.https.com/O=www.https.com"
+
+# Secret 생성
+kubectl create secret tls secret-https --key tls.key --cert tls.crt
+
+--HPA basic Resource -Utilization
+
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpa-resource-cpu
+spec:
+  maxReplicas: 10
+  minReplicas: 2
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: stateless-cpu1
+  metrics:
+  - type: Resource 
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
+
+
+

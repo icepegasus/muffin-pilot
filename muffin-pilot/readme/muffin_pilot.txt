@@ -1,0 +1,58 @@
+--docker hyper-v
+bcdedit /set hypervisorlaunchtype auto
+--virtual box
+bcdedit /set hypervisorlaunchtype off
+
+--카프카 실행
+.\zookeeper-server-start.bat ..\..\config\zookeeper.properties
+.\kafka-server-start.bat ..\..\config\server.properties
+
+
+
+
+/bin/windows/kafka-console-consumer --bootstrap-server localhost:9092 --topic shop --from-beginning
+
+--프로메테우스 적용
+https://twofootdog.tistory.com/17
+
+--fluentd 이슈해결도 있음
+https://arisu1000.tistory.com/27852
+https://github.com/arisu1000/kubernetes-book-sample/tree/master/logging
+https://stackoverflow.com/questions/48127275/how-to-configure-fluentd-daemonset-for-rbac
+
+
+
+--대상 마이크로서비스
+
+Order
+Member
+Station
+OCBPoint
+Push
+
+
+--Json 모음
+
+{
+    "memberId": 1,
+    "memberName": "최창우",
+    "memberCarNo": "14누7051",
+    "stationId": 1,
+    "stationName": "21세기",
+    "price": 20000,
+    "oilCdType": "Gasoline"
+
+}
+
+{
+    "memberName": "최차우",
+    "memberCarNo": "14누7051"
+
+}
+  application:
+    name: member-service
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9091/eureka
